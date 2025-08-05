@@ -7,9 +7,12 @@ public class even_odd {
     input.close();
     if (number % 2 == 0) {
       System.out.println("The number " + number + " is even.");
-    }
+    } 
     else {
       System.out.println("The number " + number + " is odd.");
     }
   }  
 }
+
+
+// This program checks if a number is even or odd
