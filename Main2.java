@@ -9,7 +9,6 @@ public class Main2 {
         int id;
         String name;
         double gpa;
-        float cgpa;
         char section;
 
     //input output for id    
@@ -32,6 +31,7 @@ public class Main2 {
 
         System.out.print("enter section : ");
         section = scanner.next().charAt(0);
+
 
     //outputs
 

@@ -36,6 +36,8 @@ public class arithmetic_operations {
         n1 = input.nextInt();
         System.out.print("enter number 2= ");
         n2 = input.nextInt();
+        input.close();
+
 
         //show output
         System.out.println("addition = " + add(n1, n2));
