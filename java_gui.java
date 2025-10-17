@@ -2,6 +2,10 @@
 // javac -version
 // Extension Pack for Java
 // Create your Java project folder
+// right click and run java
+// or do it manually,,go one folder back and 
+// javac foldername\filename.java
+// java foldername.filename
 
 package myjava;
 
