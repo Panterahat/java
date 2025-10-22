@@ -29,15 +29,23 @@ public class calculator implements ActionListener { // implemented actionlistene
         // this part sets the programs body
         f = new JFrame("my first java program");
         f.setBounds(800, 300, 300, 400);
+
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // this part takes interface of program into c
         c = f.getContentPane();
+        c.setBackground(new Color(33, 33, 33)); // #212121
+        // c.setBackground(new Color(38, 50, 56)); // #263238
+        // c.setBackground(new Color(0, 0, 0)); // #000000
+        // c.setBackground(new Color(224, 224, 224)); // #E0E0E0
+
         c.setLayout(null); // tells compiler that i will decide where components go
 
         // adds the first number section
         lb1 = new JLabel("number 1");
         lb1.setBounds(10, 10, 100, 30);
+        lb1.setForeground(Color.WHITE);
+
         c.add(lb1);
 
         tf1 = new JTextField();
@@ -47,6 +55,8 @@ public class calculator implements ActionListener { // implemented actionlistene
         // adds the second number section
         lb2 = new JLabel("number 2");
         lb2.setBounds(10, 50, 100, 30);
+        lb2.setForeground(Color.WHITE);
+
         c.add(lb2);
 
         tf2 = new JTextField();
@@ -56,13 +66,15 @@ public class calculator implements ActionListener { // implemented actionlistene
         // adds the results section
         lb3 = new JLabel("Result = ");
         lb3.setBounds(10, 90, 100, 30);
+        lb3.setForeground(Color.WHITE);
+
         c.add(lb3);
 
         // added the buttons grid
         p = new JPanel();
         p.setLayout(new GridLayout(5, 4, 2, 2));
         p.setBounds(10, 130, 265, 200);
-        p.setBackground(Color.WHITE);
+        p.setBackground(Color.BLACK);
         c.add(p);
 
         // using loop to initialize the buttons
@@ -71,6 +83,18 @@ public class calculator implements ActionListener { // implemented actionlistene
             btn[i] = new JButton();
             btn[i].setText(ch[i]);
             btn[i].addActionListener(this);
+            if (i == 3 || i == 7 || i == 11 || i == 13 || i == 14 || i == 15) {
+                btn[i].setBackground(new Color(0, 121, 107));
+                btn[i].setForeground(Color.WHITE);
+            } else if (i == 16 || i == 17 || i == 18 || i == 19) {
+                btn[i].setBackground(new Color(0, 150, 136));
+                btn[i].setForeground(Color.WHITE);
+
+            } else {
+                btn[i].setBackground(Color.WHITE);
+                btn[i].setForeground(Color.BLACK);
+
+            }
             p.add(btn[i]);
         }
 
