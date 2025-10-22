@@ -79,7 +79,6 @@ public class calculator implements ActionListener { // implemented actionlistene
     }
 
     public void actionPerformed(ActionEvent e) { // adds the action of every button
-        String v;
 
         String key = ((JButton) e.getSource()).getText(); // get button text
         if (init == 1) {
@@ -297,6 +296,6 @@ public class calculator implements ActionListener { // implemented actionlistene
     }
 
     public static void main(String[] args) {
-        calculator test = new calculator();
+        new calculator();
     }
 }
