@@ -7,7 +7,7 @@
 // javac foldername\filename.java
 // java foldername.filename
 
-package myjava;
+package myjava.java_gui;
 
 import javax.swing.*;
 import java.awt.*;

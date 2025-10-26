@@ -1,4 +1,4 @@
-package myjava;
+package myjava.calculator;
 
 import java.awt.*;
 import javax.swing.*;
