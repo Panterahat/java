@@ -36,7 +36,7 @@ public class calculator implements ActionListener { // implemented actionlistene
         c = f.getContentPane();
         c.setBackground(new Color(33, 33, 33)); // #212121
         // c.setBackground(new Color(38, 50, 56)); // #263238
-        // c.setBackground(new Color(0, 0, 0)); // #000000
+        // c.setBackground(new Color(0, 0, 0)); // #915aaaff
         // c.setBackground(new Color(224, 224, 224)); // #E0E0E0
 
         c.setLayout(null); // tells compiler that i will decide where components go
