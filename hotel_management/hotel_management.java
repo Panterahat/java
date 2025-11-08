@@ -8,15 +8,15 @@ import java.util.HashMap;
 
 public class hotel_management implements ActionListener {
 
-    JFrame loginframe, homeframe, addroomframe, viewroomframe, bookinFrame;
-    Container logincon, homecon, addcon, viewcon, bookcon;
+    JFrame loginframe, homeframe, addroomframe, viewroomframe, bookinFrame, viewclientframe;
+    Container logincon, homecon, addcon, viewcon, bookcon, viewclientcon;
     JLabel name, pass, error, contactdev, wellcome, roomtype, roomprice, roomno, actype, balconytype, guestname,
             guestage, divLabel, distLabel, phoneno, nidno, bookroomno;
     JTextField namef, roompricee, roomnoo, guestnamee, guestagee, phonenoo, nidnoo, bookroomnoo;
     JPasswordField passf;
     JTextArea roomDisplay;
-    JButton login, addroom, viewrooms, booking, saveRoom, addguest, CANCEL;
-    JPanel roomListPanel, card;
+    JButton login, addroom, viewrooms, booking, saveRoom, addguest, CANCEL, HISTORY;
+    JPanel roomListPanel, card, clientListPanel;
 
     int count;
     int roomnum = 0;
@@ -138,6 +138,12 @@ public class hotel_management implements ActionListener {
         booking.addActionListener(this);
         homecon.add(booking);
 
+        // view clients button
+        HISTORY = new JButton("HISTORY");
+        HISTORY.setBounds(30, 100, 220, 20); // position below BOOK button
+        HISTORY.addActionListener(this);
+        homecon.add(HISTORY);
+
         // ************************************************************************************
         // add room frame
         addroomframe = new JFrame("ALL ROOMS");
@@ -215,6 +221,20 @@ public class hotel_management implements ActionListener {
 
         JScrollPane scrollPane = new JScrollPane(roomListPanel);
         viewcon.add(scrollPane, BorderLayout.CENTER);
+
+        // ************************************************************************************
+        // view clients frame
+        viewclientframe = new JFrame("ALL BOOKED CLIENTS");
+        viewclientframe.setBounds(800, 300, 350, 400); // slightly wider for client info
+        viewclientcon = viewclientframe.getContentPane();
+        viewclientcon.setLayout(new BorderLayout());
+
+        // panel area to show clients
+        clientListPanel = new JPanel();
+        clientListPanel.setLayout(new BoxLayout(clientListPanel, BoxLayout.Y_AXIS));
+
+        JScrollPane clientScrollPane = new JScrollPane(clientListPanel);
+        viewclientcon.add(clientScrollPane, BorderLayout.CENTER);
 
         // ************************************************************************************
         // booking frame
@@ -397,7 +417,7 @@ public class hotel_management implements ActionListener {
 
                     for (Room r : rooms) {
                         card = new JPanel();
-                        card.setLayout(new GridLayout(5, 1));
+                        card.setLayout(new GridLayout(6, 1));
                         card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
                         card.setBackground(new Color(230, 240, 255)); // light blue background
                         card.add(new JLabel("Room No: " + r.roomNumber));
@@ -405,6 +425,7 @@ public class hotel_management implements ActionListener {
                         card.add(new JLabel("AC: " + r.acStatus));
                         card.add(new JLabel("Balcony: " + r.balconyStatus));
                         card.add(new JLabel("Price: " + r.price + " ৳"));
+                        card.add(new JLabel("Status: " + r.AVAILABILITY));
                         roomListPanel.add(card);
                         roomListPanel.add(Box.createVerticalStrut(10)); // space between cards
                     }
@@ -430,6 +451,45 @@ public class hotel_management implements ActionListener {
                 homeframe.setVisible(false); // hide login window
                 bookinFrame.setVisible(true); // makes the frame visible
                 break;
+            case "HISTORY":
+                if (clients.isEmpty()) {
+                    JOptionPane.showMessageDialog(homeframe, "No clients have been booked yet.");
+                } else {
+                    clientListPanel.removeAll(); // clear old content
+
+                    for (client c : clients) {
+                        JPanel clientCard = new JPanel();
+                        clientCard.setLayout(new GridLayout(9, 1)); // 8 rows for all info
+                        clientCard.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
+                        clientCard.setBackground(new Color(255, 240, 230)); // light orange background
+
+                        if (c.status.equals("CHECKED IN ✅")) {
+                            clientCard.setBackground(new Color(200, 255, 200)); // Green = Active
+                        } else {
+                            clientCard.setBackground(new Color(220, 220, 220)); // Gray = Checked out
+                        }
+
+                        clientCard.add(new JLabel(" 👤 Guest: " + c.name));
+                        clientCard.add(new JLabel(" 🎂 Age: " + c.age));
+                        clientCard.add(new JLabel(" 📍 Location: " + c.district + ", " + c.division));
+                        clientCard.add(new JLabel(" 📞 Phone: " + c.phone));
+                        clientCard.add(new JLabel(" 🆔 NID: " + c.nid));
+                        clientCard.add(new JLabel(" 🏠 Room No: " + c.roomNumber));
+                        clientCard.add(new JLabel(" 📅 Days: " + c.days));
+                        clientCard.add(new JLabel(" 📊 Status: " + c.status));
+                        clientListPanel.add(clientCard);
+                        clientListPanel.add(Box.createVerticalStrut(10)); // space between cards
+                    }
+
+                    clientListPanel.revalidate();
+                    clientListPanel.repaint();
+
+                    // position the frame nicely
+                    Point p4 = homeframe.getLocation();
+                    viewclientframe.setLocation(p4);
+                    viewclientframe.setVisible(true);
+                }
+                break;
             case "DONE":
                 try {
                     String name = guestnamee.getText();
@@ -440,10 +500,42 @@ public class hotel_management implements ActionListener {
                     String nidnum = nidnoo.getText();
                     int roomnum = Integer.parseInt(bookroomnoo.getText());
 
+                    // searching by room number
+                    Room selectedRoom = null;
+                    for (Room r : rooms) {
+                        if (r.roomNumber == roomnum) {
+                            selectedRoom = r;
+                            break; // room found
+                        }
+                    }
+
+                    // room not found error
+                    if (selectedRoom == null) {
+                        JOptionPane.showMessageDialog(bookinFrame,
+                                "❌ Room number " + roomnum + " does not exist!",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // 🔍 STEP 3: Check if room is already booked
+                    if (!selectedRoom.AVAILABILITY.equals("AVAILABLE ✅")) {
+                        JOptionPane.showMessageDialog(bookinFrame,
+                                "❌ Room " + roomnum + " is already booked!",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // Update room availability
+                    selectedRoom.AVAILABILITY = "NOT AVAILABLE ❌";
+
+                    // Create client and add to list
                     client newclient = new client(name, age, div, dist, phnum, nidnum, roomnum, 1);
                     clients.add(newclient);
 
-                    JOptionPane.showMessageDialog(addroomframe, "✅ room booking successfully!");
+                    JOptionPane.showMessageDialog(bookinFrame,
+                            "✅ Room " + roomnum + " booked successfully for " + name + "!");
 
                     // clear fields
                     guestnamee.setText("");
@@ -454,8 +546,17 @@ public class hotel_management implements ActionListener {
 
                     homeframe.setVisible(true);
                     bookinFrame.setVisible(false);
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(bookinFrame,
+                            "❌ Please enter valid inputs!",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(addroomframe, "❌ Error booking room: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(bookinFrame,
+                            "❌ Error booking room: " + ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
                 break;
 
@@ -483,6 +584,7 @@ public class hotel_management implements ActionListener {
         String balconyStatus;
         double price;
         int roomNumber;
+        String AVAILABILITY = "AVAILABLE ✅";
 
         Room(String type, String acStatus, String balconyStatus, double price, int roomNumber) {
             this.type = type;
@@ -505,6 +607,7 @@ public class hotel_management implements ActionListener {
         int age;
         int roomNumber;
         int days;
+        String status; // ← ADD THIS
 
         client(String name, int age, String division, String district, String phone, String nid, int roomNumber,
                 int days) {
@@ -513,15 +616,16 @@ public class hotel_management implements ActionListener {
             this.division = division;
             this.district = district;
             this.phone = phone;
-
             this.nid = nid;
             this.roomNumber = roomNumber;
             this.days = days;
+            this.status = "CHECKED IN ✅"; // ← ADD THIS (default status)
         }
 
         @Override
         public String toString() {
-            return "client: " + name + " | Phone: " + phone + " | Room: " + roomNumber + " | Days: " + days;
+            return "client: " + name + " | Phone: " + phone + " | Room: " + roomNumber + " | Days: " + days
+                    + " | Status: " + status;
         }
     }
 
