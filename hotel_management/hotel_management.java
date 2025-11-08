@@ -5,17 +5,19 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class hotel_management implements ActionListener {
 
-    JFrame loginframe, homeframe, addroomframe, viewroomframe, bookinFrame, viewclientframe;
-    Container logincon, homecon, addcon, viewcon, bookcon, viewclientcon;
+    JFrame loginframe, homeframe, addroomframe, viewroomframe, bookinFrame, viewclientframe, checkoutframe, billframe;
+    Container logincon, homecon, addcon, viewcon, bookcon, viewclientcon, checkoutcon, billcon;
     JLabel name, pass, error, contactdev, wellcome, roomtype, roomprice, roomno, actype, balconytype, guestname,
-            guestage, divLabel, distLabel, phoneno, nidno, bookroomno;
-    JTextField namef, roompricee, roomnoo, guestnamee, guestagee, phonenoo, nidnoo, bookroomnoo;
+            guestage, divLabel, distLabel, phoneno, nidno, bookroomno, checkoutroomlabel;
+    JTextField namef, roompricee, roomnoo, guestnamee, guestagee, phonenoo, nidnoo, bookroomnoo, checkoutroomfield;
     JPasswordField passf;
     JTextArea roomDisplay;
-    JButton login, addroom, viewrooms, booking, saveRoom, addguest, CANCEL, HISTORY;
+    JButton login, addroom, viewrooms, booking, saveRoom, addguest, CANCEL, HISTORY, CHECKOUT, GENERATEBILL;
     JPanel roomListPanel, card, clientListPanel;
 
     int count;
@@ -138,9 +140,15 @@ public class hotel_management implements ActionListener {
         booking.addActionListener(this);
         homecon.add(booking);
 
+        // ✅ ADD CHECKOUT BUTTON
+        CHECKOUT = new JButton("CHECKOUT");
+        CHECKOUT.setBounds(30, 100, 220, 20);
+        CHECKOUT.addActionListener(this);
+        homecon.add(CHECKOUT);
+
         // view clients button
         HISTORY = new JButton("HISTORY");
-        HISTORY.setBounds(30, 100, 220, 20); // position below BOOK button
+        HISTORY.setBounds(30, 130, 220, 20);
         HISTORY.addActionListener(this);
         homecon.add(HISTORY);
 
@@ -235,6 +243,48 @@ public class hotel_management implements ActionListener {
 
         JScrollPane clientScrollPane = new JScrollPane(clientListPanel);
         viewclientcon.add(clientScrollPane, BorderLayout.CENTER);
+        // ************************************************************************************
+        // checkout frame
+        checkoutframe = new JFrame("CHECKOUT GUEST");
+        checkoutframe.setBounds(800, 300, 300, 200);
+        checkoutcon = checkoutframe.getContentPane();
+        checkoutcon.setLayout(null);
+
+        // room number label
+        checkoutroomlabel = new JLabel("ENTER ROOM NUMBER:");
+        checkoutroomlabel.setBounds(10, 10, 200, 20);
+        checkoutcon.add(checkoutroomlabel);
+
+        // room number field
+        checkoutroomfield = new JTextField();
+        checkoutroomfield.setBounds(10, 35, 250, 25);
+        checkoutcon.add(checkoutroomfield);
+
+        // generate bill button
+        GENERATEBILL = new JButton("GENERATE BILL");
+        GENERATEBILL.setBounds(150, 80, 100, 30);
+        checkoutcon.add(GENERATEBILL);
+        GENERATEBILL.addActionListener(this);
+
+        // cancel button
+        JButton checkoutCancel = new JButton("CANCEL");
+        checkoutCancel.setBounds(10, 80, 100, 30);
+        checkoutcon.add(checkoutCancel);
+        checkoutCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkoutframe.setVisible(false);
+                homeframe.setVisible(true);
+                checkoutroomfield.setText(""); // clear field
+            }
+        });
+
+        // ************************************************************************************
+        // bill display frame
+        billframe = new JFrame("BILLING DETAILS");
+        billframe.setBounds(800, 300, 400, 300);
+        billcon = billframe.getContentPane();
+        billcon.setLayout(null);
 
         // ************************************************************************************
         // booking frame
@@ -409,6 +459,135 @@ public class hotel_management implements ActionListener {
                     JOptionPane.showMessageDialog(addroomframe, "❌ Error adding room: " + ex.getMessage());
                 }
                 break;
+            case "CHECKOUT":
+                Point p5 = homeframe.getLocation();
+                checkoutframe.setLocation(p5);
+
+                homeframe.setVisible(false);
+                checkoutframe.setVisible(true);
+                break;
+
+            case "GENERATE BILL":
+                try {
+                    int checkoutRoomNum = Integer.parseInt(checkoutroomfield.getText());
+
+                    // Find the client who is currently checked in
+                    client clientToCheckout = null;
+                    for (client c : clients) {
+                        if (c.roomNumber == checkoutRoomNum && c.status.equals("CHECKED IN ✅")) {
+                            clientToCheckout = c;
+                            break;
+                        }
+                    }
+
+                    // Validate client exists
+                    if (clientToCheckout == null) {
+                        JOptionPane.showMessageDialog(checkoutframe,
+                                "❌ No active booking found for room " + checkoutRoomNum,
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // Calculate days stayed
+                    LocalDate checkoutDate = LocalDate.now();
+                    long daysStayed = ChronoUnit.DAYS.between(clientToCheckout.checkInDate, checkoutDate);
+
+                    // Handle same-day checkout (minimum 1 day charge)
+                    if (daysStayed == 0) {
+                        daysStayed = 1;
+                    }
+
+                    // Find room to get price
+                    Room bookedRoom = null;
+                    for (Room r : rooms) {
+                        if (r.roomNumber == checkoutRoomNum) {
+                            bookedRoom = r;
+                            break;
+                        }
+                    }
+
+                    // Calculate total bill
+                    double totalBill = daysStayed * bookedRoom.price;
+
+                    // Update client status
+                    clientToCheckout.status = "CHECKED OUT ⚪";
+                    clientToCheckout.days = (int) daysStayed; // update actual days stayed
+
+                    // Make room available
+                    bookedRoom.AVAILABILITY = "AVAILABLE ✅";
+
+                    // Display bill
+                    billcon.removeAll(); // clear previous bill
+
+                    JLabel billTitle = new JLabel("═══════ CHECKOUT BILL ═══════");
+                    billTitle.setFont(new Font("Monospaced", Font.BOLD, 16));
+                    billTitle.setBounds(60, 10, 300, 30);
+                    billcon.add(billTitle);
+
+                    JLabel guestNameLabel = new JLabel("Guest Name: " + clientToCheckout.name);
+                    guestNameLabel.setBounds(20, 50, 350, 25);
+                    billcon.add(guestNameLabel);
+
+                    JLabel roomNumLabel = new JLabel("Room Number: " + checkoutRoomNum);
+                    roomNumLabel.setBounds(20, 80, 350, 25);
+                    billcon.add(roomNumLabel);
+
+                    JLabel checkInLabel = new JLabel("Check-In Date: " + clientToCheckout.checkInDate);
+                    checkInLabel.setBounds(20, 110, 350, 25);
+                    billcon.add(checkInLabel);
+
+                    JLabel checkOutLabel = new JLabel("Check-Out Date: " + checkoutDate);
+                    checkOutLabel.setBounds(20, 140, 350, 25);
+                    billcon.add(checkOutLabel);
+
+                    JLabel daysLabel = new JLabel("Days Stayed: " + daysStayed + " day(s)");
+                    daysLabel.setBounds(20, 170, 350, 25);
+                    billcon.add(daysLabel);
+
+                    JLabel rateLabel = new JLabel("Rate per Day: " + bookedRoom.price + " ৳");
+                    rateLabel.setBounds(20, 200, 350, 25);
+                    billcon.add(rateLabel);
+
+                    JLabel totalLabel = new JLabel("TOTAL BILL: " + totalBill + " ৳");
+                    totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
+                    totalLabel.setForeground(new Color(0, 128, 0)); // green color
+                    totalLabel.setBounds(20, 230, 350, 30);
+                    billcon.add(totalLabel);
+
+                    JButton closeButton = new JButton("CLOSE");
+                    closeButton.setBounds(140, 270, 100, 30);
+                    closeButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            billframe.setVisible(false);
+                            homeframe.setVisible(true);
+                            checkoutroomfield.setText(""); // clear checkout field
+                        }
+                    });
+                    billcon.add(closeButton);
+
+                    billcon.revalidate();
+                    billcon.repaint();
+
+                    // Hide checkout frame and show bill
+                    checkoutframe.setVisible(false);
+                    Point p6 = checkoutframe.getLocation();
+                    billframe.setLocation(p6);
+                    billframe.setVisible(true);
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(checkoutframe,
+                            "❌ Please enter a valid room number!",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(checkoutframe,
+                            "❌ Error: " + ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                break;
             case "VIEW ROOM":
                 if (rooms.isEmpty()) {
                     JOptionPane.showMessageDialog(homeframe, "No rooms have been added yet.");
@@ -475,7 +654,6 @@ public class hotel_management implements ActionListener {
                         clientCard.add(new JLabel(" 📞 Phone: " + c.phone));
                         clientCard.add(new JLabel(" 🆔 NID: " + c.nid));
                         clientCard.add(new JLabel(" 🏠 Room No: " + c.roomNumber));
-                        clientCard.add(new JLabel(" 📅 Days: " + c.days));
                         clientCard.add(new JLabel(" 📊 Status: " + c.status));
                         clientListPanel.add(clientCard);
                         clientListPanel.add(Box.createVerticalStrut(10)); // space between cards
@@ -531,7 +709,7 @@ public class hotel_management implements ActionListener {
                     selectedRoom.AVAILABILITY = "NOT AVAILABLE ❌";
 
                     // Create client and add to list
-                    client newclient = new client(name, age, div, dist, phnum, nidnum, roomnum, 1);
+                    client newclient = new client(name, age, div, dist, phnum, nidnum, roomnum);
                     clients.add(newclient);
 
                     JOptionPane.showMessageDialog(bookinFrame,
@@ -606,11 +784,11 @@ public class hotel_management implements ActionListener {
         String name, district, division, phone, nid;
         int age;
         int roomNumber;
-        int days;
         String status; // ← ADD THIS
+        LocalDate checkInDate;
+        int days;
 
-        client(String name, int age, String division, String district, String phone, String nid, int roomNumber,
-                int days) {
+        client(String name, int age, String division, String district, String phone, String nid, int roomNumber) {
             this.name = name;
             this.age = age;
             this.division = division;
@@ -618,14 +796,13 @@ public class hotel_management implements ActionListener {
             this.phone = phone;
             this.nid = nid;
             this.roomNumber = roomNumber;
-            this.days = days;
             this.status = "CHECKED IN ✅"; // ← ADD THIS (default status)
+            this.checkInDate = LocalDate.now();
         }
 
         @Override
         public String toString() {
-            return "client: " + name + " | Phone: " + phone + " | Room: " + roomNumber + " | Days: " + days
-                    + " | Status: " + status;
+            return "client: " + name + " | Phone: " + phone + " | Room: " + roomNumber + " | Status: " + status;
         }
     }
 
