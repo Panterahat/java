@@ -65,13 +65,18 @@ public class hotel_management implements ActionListener {
     ArrayList<Room> rooms = new ArrayList<>();
     ArrayList<client> clients = new ArrayList<>();
 
-    boolean devMode = true; // ✅ set this to false before final release
+    boolean devMode = false; // ✅ set this to false before final release
 
     hotel_management() {
+
+        Color frameColor = Color.decode("#598392");
+        Color buttoncColor = Color.decode("#eff6e0");
         // login page
         loginframe = new JFrame("LOG IN");
         loginframe.setBounds(800, 300, 300, 400);
         logincon = loginframe.getContentPane();
+        logincon.setBackground(frameColor);
+
         logincon.setLayout(null); // tells compiler that i will decide where components go
 
         // Username
@@ -95,6 +100,8 @@ public class hotel_management implements ActionListener {
         // log in button
         login = new JButton("Log in");
         login.setBounds(100, 150, 75, 20);
+        login.setBackground(buttoncColor);
+
         logincon.add(login);
         login.addActionListener(this);
 
@@ -115,6 +122,7 @@ public class hotel_management implements ActionListener {
         homeframe = new JFrame("HOME");
         homeframe.setBounds(800, 300, 300, 400);
         homecon = homeframe.getContentPane();
+        homecon.setBackground(frameColor);
         homecon.setLayout(null);
 
         // greetings
@@ -126,30 +134,39 @@ public class hotel_management implements ActionListener {
         addroom = new JButton("ADD ROOM");
         addroom.setBounds(30, 40, 100, 20);
         addroom.addActionListener(this);
+        addroom.setBackground(buttoncColor);
         homecon.add(addroom);
 
         // view rooms button;
         viewrooms = new JButton("VIEW ROOM");
         viewrooms.setBounds(140, 40, 110, 20);
         viewrooms.addActionListener(this);
+        viewrooms.setBackground(buttoncColor);
+
         homecon.add(viewrooms);
 
         // booking button;
         booking = new JButton("BOOK");
         booking.setBounds(30, 70, 220, 20);
         booking.addActionListener(this);
+        booking.setBackground(buttoncColor);
+
         homecon.add(booking);
 
-        // ✅ ADD CHECKOUT BUTTON
+        // CHECKOUT BUTTON
         CHECKOUT = new JButton("CHECKOUT");
         CHECKOUT.setBounds(30, 100, 220, 20);
         CHECKOUT.addActionListener(this);
+        CHECKOUT.setBackground(buttoncColor);
+
         homecon.add(CHECKOUT);
 
         // view clients button
         HISTORY = new JButton("HISTORY");
         HISTORY.setBounds(30, 130, 220, 20);
         HISTORY.addActionListener(this);
+        HISTORY.setBackground(buttoncColor);
+
         homecon.add(HISTORY);
 
         // ************************************************************************************
@@ -158,6 +175,7 @@ public class hotel_management implements ActionListener {
         addroomframe.setBounds(800, 300, 300, 400);
         addcon = addroomframe.getContentPane();
         addcon.setLayout(null);
+        addcon.setBackground(frameColor);
 
         // roomtype selection
         roomtype = new JLabel("SELECT ROOM CATAGORY :");
@@ -207,12 +225,15 @@ public class hotel_management implements ActionListener {
         // saveroom button
         saveRoom = new JButton("SAVE");
         saveRoom.setBounds(150, 310, 100, 30);
+        saveRoom.setBackground(buttoncColor);
         addcon.add(saveRoom);
         saveRoom.addActionListener(this);
 
         // cancel button
         CANCEL = new JButton("CANCEL");
         CANCEL.setBounds(10, 310, 100, 30);
+        CANCEL.setBackground(buttoncColor);
+
         addcon.add(CANCEL);
         CANCEL.addActionListener(this);
 
@@ -220,7 +241,9 @@ public class hotel_management implements ActionListener {
         // view rooms frame
         viewroomframe = new JFrame("ALL SAVED ROOMS");
         viewroomframe.setBounds(800, 300, 300, 400);
+
         viewcon = viewroomframe.getContentPane();
+        viewcon.setBackground(frameColor);
         viewcon.setLayout(new BorderLayout());
 
         // panel area to show rooms
@@ -235,6 +258,8 @@ public class hotel_management implements ActionListener {
         viewclientframe = new JFrame("ALL BOOKED CLIENTS");
         viewclientframe.setBounds(800, 300, 350, 400); // slightly wider for client info
         viewclientcon = viewclientframe.getContentPane();
+        viewclientcon.setBackground(frameColor);
+
         viewclientcon.setLayout(new BorderLayout());
 
         // panel area to show clients
@@ -248,6 +273,7 @@ public class hotel_management implements ActionListener {
         checkoutframe = new JFrame("CHECKOUT GUEST");
         checkoutframe.setBounds(800, 300, 300, 200);
         checkoutcon = checkoutframe.getContentPane();
+        checkoutcon.setBackground(frameColor);
         checkoutcon.setLayout(null);
 
         // room number label
@@ -263,12 +289,15 @@ public class hotel_management implements ActionListener {
         // generate bill button
         GENERATEBILL = new JButton("GENERATE BILL");
         GENERATEBILL.setBounds(150, 80, 100, 30);
+        GENERATEBILL.setBackground(buttoncColor);
         checkoutcon.add(GENERATEBILL);
         GENERATEBILL.addActionListener(this);
 
         // cancel button
         JButton checkoutCancel = new JButton("CANCEL");
         checkoutCancel.setBounds(10, 80, 100, 30);
+        checkoutCancel.setBackground(buttoncColor);
+
         checkoutcon.add(checkoutCancel);
         checkoutCancel.addActionListener(new ActionListener() {
             @Override
@@ -572,6 +601,7 @@ public class hotel_management implements ActionListener {
 
                     // Hide checkout frame and show bill
                     checkoutframe.setVisible(false);
+                    homeframe.setVisible(true);
                     Point p6 = checkoutframe.getLocation();
                     billframe.setLocation(p6);
                     billframe.setVisible(true);
@@ -796,7 +826,7 @@ public class hotel_management implements ActionListener {
             this.phone = phone;
             this.nid = nid;
             this.roomNumber = roomNumber;
-            this.status = "CHECKED IN ✅"; // ← ADD THIS (default status)
+            this.status = "CHECKED IN ✅";
             this.checkInDate = LocalDate.now();
         }
 
