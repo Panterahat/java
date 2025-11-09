@@ -126,7 +126,7 @@ public class hotel_management implements ActionListener {
         homecon.setLayout(null);
 
         // greetings
-        wellcome = new JLabel("wellcome sir");
+        wellcome = new JLabel("welcome sir");
         wellcome.setBounds(100, 10, 100, 20);
         homecon.add(wellcome);
 
