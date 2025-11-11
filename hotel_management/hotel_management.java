@@ -74,6 +74,7 @@ public class hotel_management implements ActionListener {
         // login page
         loginframe = new JFrame("LOG IN");
         loginframe.setBounds(800, 300, 300, 400);
+        loginframe.setResizable(false);
         logincon = loginframe.getContentPane();
         logincon.setBackground(frameColor);
 
@@ -121,6 +122,7 @@ public class hotel_management implements ActionListener {
         // home page
         homeframe = new JFrame("HOME");
         homeframe.setBounds(800, 300, 300, 400);
+        homeframe.setResizable(false);
         homecon = homeframe.getContentPane();
         homecon.setBackground(frameColor);
         homecon.setLayout(null);
@@ -173,6 +175,7 @@ public class hotel_management implements ActionListener {
         // add room frame
         addroomframe = new JFrame("ALL ROOMS");
         addroomframe.setBounds(800, 300, 300, 400);
+        addroomframe.setResizable(false);
         addcon = addroomframe.getContentPane();
         addcon.setLayout(null);
         addcon.setBackground(frameColor);
@@ -241,6 +244,7 @@ public class hotel_management implements ActionListener {
         // view rooms frame
         viewroomframe = new JFrame("ALL SAVED ROOMS");
         viewroomframe.setBounds(800, 300, 300, 400);
+        viewroomframe.setResizable(false);
 
         viewcon = viewroomframe.getContentPane();
         viewcon.setBackground(frameColor);
@@ -257,6 +261,7 @@ public class hotel_management implements ActionListener {
         // view clients frame
         viewclientframe = new JFrame("ALL BOOKED CLIENTS");
         viewclientframe.setBounds(800, 300, 350, 400); // slightly wider for client info
+        viewclientframe.setResizable(false);
         viewclientcon = viewclientframe.getContentPane();
         viewclientcon.setBackground(frameColor);
 
@@ -272,6 +277,7 @@ public class hotel_management implements ActionListener {
         // checkout frame
         checkoutframe = new JFrame("CHECKOUT GUEST");
         checkoutframe.setBounds(800, 300, 300, 200);
+        checkoutframe.setResizable(false);
         checkoutcon = checkoutframe.getContentPane();
         checkoutcon.setBackground(frameColor);
         checkoutcon.setLayout(null);
@@ -312,6 +318,7 @@ public class hotel_management implements ActionListener {
         // bill display frame
         billframe = new JFrame("BILLING DETAILS");
         billframe.setBounds(800, 300, 400, 300);
+        billframe.setResizable(false);
         billcon = billframe.getContentPane();
         billcon.setLayout(null);
 
@@ -319,6 +326,7 @@ public class hotel_management implements ActionListener {
         // booking frame
         bookinFrame = new JFrame("INSERT GUEST DETAILS");
         bookinFrame.setBounds(800, 300, 300, 400);
+        bookinFrame.setResizable(false);
         bookcon = bookinFrame.getContentPane();
         bookcon.setLayout(null);
 
