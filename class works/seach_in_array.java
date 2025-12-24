@@ -27,5 +27,6 @@ public class seach_in_array {
         } else {
             System.out.println("element not found in array");
         }
+        input.close();
     }
 }

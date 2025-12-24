@@ -1,4 +1,4 @@
-package myjava.hotel_management;
+
 
 import java.awt.*;
 import javax.swing.*;

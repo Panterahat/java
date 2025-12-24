@@ -27,5 +27,7 @@ public class second_highest_element {
         } else {
             System.out.println("the second highest element in the array is " + second_highest);
         }
+
+        input.close();
     }
 }
