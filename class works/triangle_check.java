@@ -12,6 +12,6 @@ public class triangle_check {
         } else {
             System.out.println("The integers cannot form a triangle.");
         }
-
+        input.close();
     }
 }
