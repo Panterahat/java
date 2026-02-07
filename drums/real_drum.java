@@ -13,14 +13,28 @@ public class real_drum implements ActionListener, KeyListener {
     JButton kick1, kick2, snare, tom1, tom2, tom3, crash, splash, ride, openhh, closehh, floor, modeBtn, settings,
             buttonkey, elementchangeb;
     JLabel buttonmapping, elementchangel;
+    JTextField[] elements = new JTextField[12];
+    JTextField[] keys = new JTextField[12];
+
+    String[] drumNames = {
+            "KICK", "SNARE", "CLOSE HH", "FLOOR",
+            "OPEN HH", "TOM1", "TOM2", "TOM3",
+            "CRASH", "SPLASH", "RIDE", "KICK2"
+    };
+
+    String[] defaultKeys = {
+            "A", "S", "D", "F",
+            "Z", "Q", "W", "E",
+            "R", "T", "Y", "U"
+    };
 
     HashMap<Integer, String> keyMap = new HashMap<>();
     {
-        keyMap.put(KeyEvent.VK_A, "Kick.wav");
-        keyMap.put(KeyEvent.VK_Z, "Kick.wav");
-        keyMap.put(KeyEvent.VK_S, "Snare.wav");
-        keyMap.put(KeyEvent.VK_D, "Hats.wav");
-        keyMap.put(KeyEvent.VK_F, "Clap.wav");
+        keyMap.put(KeyEvent.VK_A, "KICK.wav");
+        keyMap.put(KeyEvent.VK_Z, "KICK.wav");
+        keyMap.put(KeyEvent.VK_S, "SNARE.wav");
+        keyMap.put(KeyEvent.VK_D, "CLOSE HH.wav");
+        keyMap.put(KeyEvent.VK_F, "FLOOR.wav");
     }
 
     boolean keyboardMode = false;
@@ -140,7 +154,7 @@ public class real_drum implements ActionListener, KeyListener {
 
             if (keyboardMode) {
                 modeBtn.setText("MODE: KEYBOARD");
-                // mainf.requestFocus(); // keyboard needs focus
+                mainf.requestFocus(); // keyboard needs focus
             } else {
                 modeBtn.setText("MODE: MOUSE");
             }
@@ -235,9 +249,45 @@ public class real_drum implements ActionListener, KeyListener {
         back2settingsBtn.setFocusPainted(false);
         header2.add(back2settingsBtn);
 
+        // button change
+        // map*************************************************************************
+
+        int y = 70, z = 70;
+
+        for (int i = 0; i < 12; i++) {
+            if (i < 6) {
+                elements[i] = new JTextField(drumNames[i]);
+                elements[i].setBounds(150, y, 120, 30);
+                elements[i].setEditable(false);
+                buttonchangec.add(elements[i]);
+
+                keys[i] = new JTextField(defaultKeys[i]);
+                keys[i].setBounds(290, y, 50, 30);
+                buttonchangec.add(keys[i]);
+
+                y += 40;
+            } else {
+                elements[i] = new JTextField(drumNames[i]);
+                elements[i].setBounds(630, z, 120, 30);
+                elements[i].setEditable(false);
+                buttonchangec.add(elements[i]);
+
+                keys[i] = new JTextField(defaultKeys[i]);
+                keys[i].setBounds(770, z, 50, 30);
+                buttonchangec.add(keys[i]);
+
+                z += 40;
+            }
+        }
+
+        JButton saveBtn = new JButton("SAVE");
+        saveBtn.setBounds(460, 400, 80, 30);
+        saveBtn.addActionListener(this);
+        buttonchangec.add(saveBtn);
+
         // EQUIPMENTS CHANGE
         // INTERFACE*********************************************************************************
-        elementchangef = new JFrame("BUTTON KEY SET");
+        elementchangef = new JFrame("EQUIPMENT CHANGE");
         elementchangef.setBounds(400, 300, 1000, 500);
         elementchangef.setResizable(false);
         elementchangec = elementchangef.getContentPane();
@@ -290,16 +340,16 @@ public class real_drum implements ActionListener, KeyListener {
 
         switch (key) {
             case "KICK":
-                playSound("Kick.wav");
+                playSound("KICK.wav");
                 break;
             case "SNARE":
-                playSound("Snare.wav");
+                playSound("SNARE.wav");
                 break;
             case "CLOSE HH":
-                playSound("Hats.wav");
+                playSound("CLOSE HH.wav");
                 break;
             case "FLOOR":
-                playSound("Clap.wav");
+                playSound("FLOOR.wav");
                 break;
             case "SETTINGS":
                 Point p1 = mainf.getLocation();
@@ -337,10 +387,36 @@ public class real_drum implements ActionListener, KeyListener {
                 settingsf.setLocation(p4);
                 settingsf.setVisible(true);
                 break;
+            case "SAVE":
+                for (int i = 0; i < 12; i++) {
+                    String text = keys[i].getText().toUpperCase();
+
+                    if (text.length() != 1) {
+                        JOptionPane.showMessageDialog(
+                                buttonchangef,
+                                "Enter only ONE key in " + drumNames[i]);
+                        return; // stop saving completely
+                    }
+
+                    int newKey = KeyEvent.getExtendedKeyCodeForChar(text.charAt(0));
+                    if (newKey == KeyEvent.VK_UNDEFINED) {
+                        JOptionPane.showMessageDialog(
+                                buttonchangef,
+                                "Invalid key for " + drumNames[i]);
+                        return;
+                    }
+
+                    updateKey(drumNames[i], newKey);
+                }
+
+                JOptionPane.showMessageDialog(buttonchangef, "All keys updated!");
+                break;
 
         }
-        // mainf.requestFocus(); // 👈 keeps keyboard alive
+
     }
+
+    // mainf.requestFocus(); // 👈 keeps keyboard alive
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -360,6 +436,14 @@ public class real_drum implements ActionListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+    }
+
+    void updateKey(String drum, int newKey) {
+        // Remove any existing key that maps to this drum
+        keyMap.entrySet().removeIf(entry -> entry.getValue().equals(drum + ".wav"));
+
+        // Add new key mapping
+        keyMap.put(newKey, drum + ".wav");
     }
 
     void playSound(String fileName) {
