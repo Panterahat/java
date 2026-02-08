@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class real_drum implements ActionListener, KeyListener {
     JFrame mainf, settingsf, buttonchangef, elementchangef;
     Container mainc, settingsc, buttonchangec, elementchangec;
-    JButton kick1, kick2, snare, tom1, tom2, tom3, crash, splash, ride, openhh, closehh, floor, modeBtn, settings,
+    JButton kick1, kick2, snare, tom1, tom2, tom3, crash, splash, ride, openhh, closehh, floor, modeBtn, settings, play,
             buttonkey, elementchangeb;
     JLabel buttonmapping, elementchangel;
     JTextField[] elements = new JTextField[12];
@@ -28,6 +28,13 @@ public class real_drum implements ActionListener, KeyListener {
             "R", "T", "Y", "U"
     };
 
+    String[] BPMs = {
+            "60", "80", "120", "180"
+    };
+    String[] BPMTYPES = {
+            "1", "2", "3", "4"
+    };
+
     HashMap<Integer, String> keyMap = new HashMap<>();
     {
         keyMap.put(KeyEvent.VK_A, "KICK.wav");
@@ -38,6 +45,10 @@ public class real_drum implements ActionListener, KeyListener {
     }
 
     boolean keyboardMode = false;
+    boolean playing = false;
+    Timer beatTimer;
+
+    int bpm, beatDelay, beattype, step = 0;
 
     real_drum() {
         // main
@@ -160,7 +171,74 @@ public class real_drum implements ActionListener, KeyListener {
             }
         });
 
+        // drop down menu for BPM speed
+        JComboBox<String> BPM = new JComboBox<>(BPMs);
+        BPM.setBounds(250, 10, 100, 30);
+        mainc.add(BPM);
+
         mainf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // drop down menu for BPM types
+        JComboBox<String> BPMTYPE = new JComboBox<>(BPMTYPES);
+        BPMTYPE.setBounds(350, 10, 50, 30);
+        mainc.add(BPMTYPE);
+
+        mainf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // play button
+        play = new JButton("▶️");
+        play.setBounds(400, 10, 50, 30);
+        play.setFocusable(false);
+        mainc.add(play);
+        play.addActionListener(e -> {
+            bpm = Integer.parseInt((String) BPM.getSelectedItem());
+            beattype = Integer.parseInt((String) BPMTYPE.getSelectedItem());
+            beatDelay = 60000 / bpm;
+
+            beatTimer.setDelay(beatDelay);
+
+            playing = !playing;
+
+            if (playing) {
+                play.setText("⏸️");
+                step = 0;
+                beatTimer.start();
+                mainf.requestFocus();
+            } else {
+                play.setText("▶️");
+                beatTimer.stop();
+            }
+        });
+
+        beatTimer = new Timer(0, e -> {
+            if (!playing)
+                return;
+
+            switch (beattype) {
+                case 1:
+                    playSound("KICK.wav"); // metronome
+                    break;
+
+                case 2:
+                    if (step % 2 == 0)
+                        playSound("KICK.wav");
+                    if (step % 2 == 1)
+                        playSound("CLOSE HH.wav");
+                    step++;
+                    break;
+                case 3:
+                    if (step % 4 == 0)
+                        playSound("KICK.wav");
+                    if (step % 4 == 1)
+                        playSound("CLOSE HH.wav");
+                    if (step % 4 == 2)
+                        playSound("SNARE.wav");
+                    if (step % 4 == 3)
+                        playSound("CLOSE HH.wav");
+                    step++;
+                    break;
+            }
+        });
 
         // settings
         // interface*****************************************************************************************
