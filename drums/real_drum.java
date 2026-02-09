@@ -22,6 +22,8 @@ public class real_drum implements ActionListener, KeyListener {
             "CRASH", "SPLASH", "RIDE", "KICK2"
     };
 
+    JComboBox<String>[] equipmentBoxes = new JComboBox[12];
+
     String[] defaultKeys = {
             "A", "S", "D", "F",
             "Z", "Q", "W", "E",
@@ -240,6 +242,8 @@ public class real_drum implements ActionListener, KeyListener {
             }
         });
 
+        // button hit animation
+
         // settings
         // interface*****************************************************************************************
         settingsf = new JFrame("SETTINGS");
@@ -394,6 +398,41 @@ public class real_drum implements ActionListener, KeyListener {
 
         header3.add(back2settingsBtn2);
 
+        // eqipment change map
+        int u = 70, v = 70;
+
+        // drop down menu for equipment
+
+        for (int i = 0; i < 12; i++) {
+            if (i < 6) {
+                elements[i] = new JTextField(drumNames[i]);
+                elements[i].setBounds(150, u, 120, 30);
+                elements[i].setEditable(false);
+                elementchangec.add(elements[i]);
+                equipmentBoxes[i] = new JComboBox<>(drumNames);
+                equipmentBoxes[i].setBounds(280, u, 100, 30);
+                equipmentBoxes[i].setSelectedItem(elements[i].getText());
+                elementchangec.add(equipmentBoxes[i]);
+                u += 40;
+            } else {
+                elements[i] = new JTextField(drumNames[i]);
+                elements[i].setBounds(630, v, 120, 30);
+                elements[i].setEditable(false);
+                elementchangec.add(elements[i]);
+                equipmentBoxes[i] = new JComboBox<>(drumNames);
+                equipmentBoxes[i].setBounds(760, v, 100, 30);
+                equipmentBoxes[i].setSelectedItem(elements[i].getText());
+                elementchangec.add(equipmentBoxes[i]);
+                v += 40;
+            }
+        }
+        // confirm button
+        JButton confirmEquipBtn = new JButton("CONFIRM");
+        confirmEquipBtn.setBounds(460, 400, 100, 30);
+        confirmEquipBtn.setFocusable(false);
+        confirmEquipBtn.addActionListener(this);
+        elementchangec.add(confirmEquipBtn);
+
         // // back buttom
         // back = new JButton("<=");
         // back.setBounds(10, 10, 50, 30);
@@ -419,15 +458,20 @@ public class real_drum implements ActionListener, KeyListener {
         switch (key) {
             case "KICK":
                 playSound("KICK.wav");
+                animateButton(kick1);
+                animateButton(kick2);
                 break;
             case "SNARE":
                 playSound("SNARE.wav");
+                animateButton(snare);
                 break;
             case "CLOSE HH":
                 playSound("CLOSE HH.wav");
+                animateButton(closehh);
                 break;
             case "FLOOR":
                 playSound("FLOOR.wav");
+                animateButton(floor);
                 break;
             case "SETTINGS":
                 Point p1 = mainf.getLocation();
@@ -465,6 +509,10 @@ public class real_drum implements ActionListener, KeyListener {
                 settingsf.setLocation(p4);
                 settingsf.setVisible(true);
                 break;
+            case "CONFIRM":
+                saveEquipmentChanges();
+                break;
+
             case "SAVE":
                 for (int i = 0; i < 12; i++) {
                     String text = keys[i].getText().toUpperCase();
@@ -504,8 +552,11 @@ public class real_drum implements ActionListener, KeyListener {
         int keyCode = e.getKeyCode();
 
         if (keyMap.containsKey(keyCode)) {
-            playSound(keyMap.get(keyCode));
+            String sound = keyMap.get(keyCode);
+            playSound(sound);
+            animateBySound(sound);
         }
+
     }
 
     @Override
@@ -514,6 +565,112 @@ public class real_drum implements ActionListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+    }
+
+    void saveEquipmentChanges() {
+
+        // 1️⃣ Read selections from combo boxes → drumNames
+        for (int i = 0; i < 12; i++) {
+            String selected = (String) equipmentBoxes[i].getSelectedItem();
+
+            if (selected == null || selected.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        elementchangef,
+                        "Invalid selection at position " + (i + 1));
+                return;
+            }
+
+            drumNames[i] = selected;
+        }
+
+        // 2️⃣ Update MAIN SCREEN buttons
+        kick1.setText(drumNames[0]);
+        snare.setText(drumNames[1]);
+        closehh.setText(drumNames[2]);
+        floor.setText(drumNames[3]);
+        openhh.setText(drumNames[4]);
+        tom1.setText(drumNames[5]);
+        tom2.setText(drumNames[6]);
+        tom3.setText(drumNames[7]);
+        crash.setText(drumNames[8]);
+        splash.setText(drumNames[9]);
+        ride.setText(drumNames[10]);
+        kick2.setText(drumNames[11]);
+
+        // 3️⃣ Update BUTTON-KEY CHANGE FRAME labels
+        for (int i = 0; i < 12; i++) {
+            elements[i].setText(drumNames[i]);
+        }
+
+        // 4️⃣ Sync equipment screen again (combo + textfield)
+        for (int i = 0; i < 12; i++) {
+            equipmentBoxes[i].setSelectedItem(drumNames[i]);
+        }
+
+        JOptionPane.showMessageDialog(
+                elementchangef,
+                "Equipment changes saved successfully!");
+    }
+
+    void animateBySound(String sound) {
+        switch (sound) {
+            case "KICK.wav":
+                animateButton(kick1);
+                animateButton(kick2);
+                break;
+
+            case "SNARE.wav":
+                animateButton(snare);
+                break;
+
+            case "CLOSE HH.wav":
+                animateButton(closehh);
+                break;
+
+            case "FLOOR.wav":
+                animateButton(floor);
+                break;
+
+            case "OPEN HH.wav":
+                animateButton(openhh);
+                break;
+
+            case "CRASH.wav":
+                animateButton(crash);
+                break;
+
+            case "SPLASH.wav":
+                animateButton(splash);
+                break;
+
+            case "RIDE.wav":
+                animateButton(ride);
+                break;
+
+            case "TOM1.wav":
+                animateButton(tom1);
+                break;
+
+            case "TOM2.wav":
+                animateButton(tom2);
+                break;
+
+            case "TOM3.wav":
+                animateButton(tom3);
+                break;
+        }
+    }
+
+    void animateButton(JButton btn) {
+        Color original = btn.getBackground();
+
+        btn.setBackground(Color.ORANGE); // hit color
+
+        Timer t = new Timer(80, e -> {
+            btn.setBackground(original);
+        });
+        t.setRepeats(false);
+        t.start();
     }
 
     void updateKey(String drum, int newKey) {
