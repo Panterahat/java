@@ -10,7 +10,8 @@ import java.util.HashMap;
 public class real_drum implements ActionListener, KeyListener {
     JFrame mainf, settingsf, buttonchangef, elementchangef;
     Container mainc, settingsc, buttonchangec, elementchangec;
-    JButton kick1, kick2, snare, tom1, tom2, tom3, crash, splash, ride, openhh, closehh, floor, modeBtn, settings, play,
+    JButton kick1, kick2, snare, tom1, tom2, tom3, crash, crash2, splash, ride, openhh, closehh, floor, modeBtn,
+            settings, play,
             buttonkey, elementchangeb;
     JLabel buttonmapping, elementchangel;
     JTextField[] elements = new JTextField[12];
@@ -19,7 +20,8 @@ public class real_drum implements ActionListener, KeyListener {
     String[] drumNames = {
             "KICK", "SNARE", "CLOSE HH", "FLOOR",
             "OPEN HH", "TOM1", "TOM2", "TOM3",
-            "CRASH", "SPLASH", "RIDE", "KICK2"
+            "CRASH", "SPLASH", "RIDE", "KICK2",
+            "CRASH 2"
     };
 
     JComboBox<String>[] equipmentBoxes = new JComboBox[12];
@@ -37,13 +39,24 @@ public class real_drum implements ActionListener, KeyListener {
             "1", "2", "3", "4"
     };
 
+    Color buttColor = new Color(156, 213, 255);
+
     HashMap<Integer, String> keyMap = new HashMap<>();
     {
-        keyMap.put(KeyEvent.VK_A, "KICK.wav");
         keyMap.put(KeyEvent.VK_Z, "KICK.wav");
-        keyMap.put(KeyEvent.VK_S, "SNARE.wav");
+        keyMap.put(KeyEvent.VK_A, "KICK.wav");
+        keyMap.put(KeyEvent.VK_S, "SNARE 2.wav");
         keyMap.put(KeyEvent.VK_D, "CLOSE HH.wav");
-        keyMap.put(KeyEvent.VK_F, "FLOOR.wav");
+        keyMap.put(KeyEvent.VK_F, "FLOOR2.wav");
+        keyMap.put(KeyEvent.VK_G, "OPEN HH.wav");
+        keyMap.put(KeyEvent.VK_H, "RIDE.wav");
+        keyMap.put(KeyEvent.VK_J, "CRASH 2.wav");
+        keyMap.put(KeyEvent.VK_R, "TOM 1.wav");
+        keyMap.put(KeyEvent.VK_T, "TOM 2.wav");
+        keyMap.put(KeyEvent.VK_Y, "TOM 3.wav");
+        keyMap.put(KeyEvent.VK_U, "CRASH.wav");
+        keyMap.put(KeyEvent.VK_I, "SPLASH.wav");
+
     }
 
     boolean keyboardMode = false;
@@ -70,12 +83,14 @@ public class real_drum implements ActionListener, KeyListener {
         kick1 = new JButton("KICK");
         kick1.setBounds(250, 300, 200, 100);
         kick1.setFocusable(false);
+        kick1.setBackground(buttColor);
         mainc.add(kick1);
         kick1.addActionListener(this);
 
         kick2 = new JButton("KICK");
         kick2.setBounds(500, 300, 200, 100);
         kick2.setFocusable(false);
+        kick2.setBackground(buttColor);
         mainc.add(kick2);
         kick2.addActionListener(this);
 
@@ -83,6 +98,7 @@ public class real_drum implements ActionListener, KeyListener {
         snare = new JButton("SNARE");
         snare.setBounds(375, 170, 200, 100);
         snare.setFocusable(false);
+        snare.setBackground(buttColor);
         mainc.add(snare);
         snare.addActionListener(this);
 
@@ -90,6 +106,7 @@ public class real_drum implements ActionListener, KeyListener {
         floor = new JButton("FLOOR");
         floor.setBounds(30, 300, 200, 100);
         floor.setFocusable(false);
+        floor.setBackground(buttColor);
         mainc.add(floor);
         floor.addActionListener(this);
 
@@ -97,6 +114,7 @@ public class real_drum implements ActionListener, KeyListener {
         closehh = new JButton("CLOSE HH");
         closehh.setBounds(730, 170, 200, 110);
         closehh.setFocusable(false);
+        closehh.setBackground(buttColor);
         mainc.add(closehh);
         closehh.addActionListener(this);
 
@@ -104,6 +122,7 @@ public class real_drum implements ActionListener, KeyListener {
         openhh = new JButton("OPEN HH");
         openhh.setBounds(730, 290, 200, 110);
         openhh.setFocusable(false);
+        openhh.setBackground(buttColor);
         mainc.add(openhh);
         openhh.addActionListener(this);
 
@@ -111,6 +130,7 @@ public class real_drum implements ActionListener, KeyListener {
         ride = new JButton("RIDE");
         ride.setBounds(730, 50, 200, 100);
         ride.setFocusable(false);
+        ride.setBackground(buttColor);
         mainc.add(ride);
         ride.addActionListener(this);
 
@@ -118,13 +138,23 @@ public class real_drum implements ActionListener, KeyListener {
         crash = new JButton("CRASH");
         crash.setBounds(30, 50, 200, 100);
         crash.setFocusable(false);
+        crash.setBackground(buttColor);
         mainc.add(crash);
         crash.addActionListener(this);
+
+        // crash drum
+        crash2 = new JButton("CRASH 2");
+        crash2.setBounds(30, 170, 200, 100);
+        crash2.setFocusable(false);
+        crash2.setBackground(buttColor);
+        mainc.add(crash2);
+        crash2.addActionListener(this);
 
         // splash drum
         splash = new JButton("SPLASH");
         splash.setBounds(250, 50, 200, 100);
         splash.setFocusable(false);
+        splash.setBackground(buttColor);
         mainc.add(splash);
         splash.addActionListener(this);
 
@@ -132,6 +162,7 @@ public class real_drum implements ActionListener, KeyListener {
         tom1 = new JButton("TOM1");
         tom1.setBounds(460, 50, 115, 100);
         tom1.setFocusable(false);
+        tom1.setBackground(buttColor);
         mainc.add(tom1);
         tom1.addActionListener(this);
 
@@ -139,6 +170,7 @@ public class real_drum implements ActionListener, KeyListener {
         tom2 = new JButton("TOM2");
         tom2.setBounds(590, 50, 115, 100);
         tom2.setFocusable(false);
+        tom2.setBackground(buttColor);
         mainc.add(tom2);
         tom2.addActionListener(this);
 
@@ -146,6 +178,7 @@ public class real_drum implements ActionListener, KeyListener {
         tom3 = new JButton("TOM3");
         tom3.setBounds(590, 170, 115, 100);
         tom3.setFocusable(false);
+        tom3.setBackground(buttColor);
         mainc.add(tom3);
         tom3.addActionListener(this);
 
@@ -153,13 +186,20 @@ public class real_drum implements ActionListener, KeyListener {
         settings = new JButton("SETTINGS");
         settings.setBounds(30, 10, 200, 30);
         settings.setFocusable(false);
+        settings.setBackground(buttColor);
         mainc.add(settings);
-        settings.addActionListener(this);
+        settings.addActionListener(e -> {
+            Point p1 = mainf.getLocation();
+            settingsf.setLocation(p1);
+            settingsf.setVisible(true);
+            mainf.setVisible(false);
+        });
 
         // mode button
         modeBtn = new JButton("MODE: MOUSE");
         modeBtn.setBounds(730, 10, 200, 30);
         modeBtn.setFocusable(false);
+        modeBtn.setBackground(buttColor);
         mainc.add(modeBtn);
 
         modeBtn.addActionListener(e -> {
@@ -189,8 +229,9 @@ public class real_drum implements ActionListener, KeyListener {
 
         // play button
         play = new JButton("▶️");
-        play.setBounds(400, 10, 50, 30);
+        play.setBounds(400, 10, 100, 30);
         play.setFocusable(false);
+        play.setBackground(buttColor);
         mainc.add(play);
         play.addActionListener(e -> {
             bpm = Integer.parseInt((String) BPM.getSelectedItem());
@@ -234,7 +275,7 @@ public class real_drum implements ActionListener, KeyListener {
                     if (step % 4 == 1)
                         playSound("CLOSE HH.wav");
                     if (step % 4 == 2)
-                        playSound("SNARE.wav");
+                        playSound("SNARE 2.wav");
                     if (step % 4 == 3)
                         playSound("CLOSE HH.wav");
                     step++;
@@ -265,7 +306,13 @@ public class real_drum implements ActionListener, KeyListener {
         JButton backBtn = new JButton("← Back");
         backBtn.setBounds(10, 15, 90, 30);
         // backBtn.setFocusable(false);
-        backBtn.addActionListener(this);
+        // backBtn.addActionListener(this);
+        backBtn.addActionListener(e -> {
+            Point p2 = settingsf.getLocation();
+            mainf.setLocation(p2);
+            settingsf.setVisible(false);
+            mainf.setVisible(true);
+        });
         backBtn.setBackground(Color.WHITE);
         backBtn.setForeground(Color.black);
         backBtn.setBorder(BorderFactory.createLineBorder(new Color(90, 90, 90)));
@@ -462,29 +509,61 @@ public class real_drum implements ActionListener, KeyListener {
                 animateButton(kick2);
                 break;
             case "SNARE":
-                playSound("SNARE.wav");
+                playSound("SNARE 2.wav");
                 animateButton(snare);
                 break;
             case "CLOSE HH":
                 playSound("CLOSE HH.wav");
                 animateButton(closehh);
                 break;
+            case "OPEN HH":
+                playSound("OPEN HH.wav");
+                animateButton(openhh);
+                break;
+            case "TOM1":
+                playSound("TOM 1.wav");
+                animateButton(tom1);
+                break;
+            case "TOM2":
+                playSound("TOM 2.wav");
+                animateButton(tom2);
+                break;
+            case "TOM3":
+                playSound("TOM 3.wav");
+                animateButton(tom3);
+                break;
+            case "CRASH 2":
+                playSound("CRASH 2.wav");
+                animateButton(crash2);
+                break;
             case "FLOOR":
-                playSound("FLOOR.wav");
+                playSound("FLOOR2.wav");
                 animateButton(floor);
                 break;
-            case "SETTINGS":
-                Point p1 = mainf.getLocation();
-                settingsf.setLocation(p1);
-                settingsf.setVisible(true);
-                mainf.setVisible(false);
+            case "CRASH":
+                playSound("CRASH.wav");
+                animateButton(crash);
                 break;
-            case "← Back":
-                Point p2 = settingsf.getLocation();
-                mainf.setLocation(p2);
-                settingsf.setVisible(false);
-                mainf.setVisible(true);
+            case "SPLASH":
+                playSound("SPLASH.wav");
+                animateButton(splash);
                 break;
+            case "RIDE":
+                playSound("RIDE.wav");
+                animateButton(ride);
+                break;
+            // case "SETTINGS":
+            // Point p1 = mainf.getLocation();
+            // settingsf.setLocation(p1);
+            // settingsf.setVisible(true);
+            // mainf.setVisible(false);
+            // break;
+            // case "← Back":
+            // Point p2 = settingsf.getLocation();
+            // mainf.setLocation(p2);
+            // settingsf.setVisible(false);
+            // mainf.setVisible(true);
+            // break;
             case "CHANGE":
                 Point p3 = settingsf.getLocation();
                 buttonchangef.setLocation(p3);
@@ -596,6 +675,7 @@ public class real_drum implements ActionListener, KeyListener {
         splash.setText(drumNames[9]);
         ride.setText(drumNames[10]);
         kick2.setText(drumNames[11]);
+        crash2.setText(drumNames[12]);
 
         // 3️⃣ Update BUTTON-KEY CHANGE FRAME labels
         for (int i = 0; i < 12; i++) {
@@ -619,7 +699,7 @@ public class real_drum implements ActionListener, KeyListener {
                 animateButton(kick2);
                 break;
 
-            case "SNARE.wav":
+            case "SNARE 2.wav":
                 animateButton(snare);
                 break;
 
@@ -627,7 +707,7 @@ public class real_drum implements ActionListener, KeyListener {
                 animateButton(closehh);
                 break;
 
-            case "FLOOR.wav":
+            case "FLOOR2.wav":
                 animateButton(floor);
                 break;
 
@@ -639,6 +719,10 @@ public class real_drum implements ActionListener, KeyListener {
                 animateButton(crash);
                 break;
 
+            case "CRASH 2.wav":
+                animateButton(crash2);
+                break;
+
             case "SPLASH.wav":
                 animateButton(splash);
                 break;
@@ -647,27 +731,25 @@ public class real_drum implements ActionListener, KeyListener {
                 animateButton(ride);
                 break;
 
-            case "TOM1.wav":
+            case "TOM 1.wav":
                 animateButton(tom1);
                 break;
 
-            case "TOM2.wav":
+            case "TOM 2.wav":
                 animateButton(tom2);
                 break;
 
-            case "TOM3.wav":
+            case "TOM 3.wav":
                 animateButton(tom3);
                 break;
         }
     }
 
     void animateButton(JButton btn) {
-        Color original = btn.getBackground();
-
         btn.setBackground(Color.ORANGE); // hit color
 
         Timer t = new Timer(80, e -> {
-            btn.setBackground(original);
+            btn.setBackground(buttColor);
         });
         t.setRepeats(false);
         t.start();
