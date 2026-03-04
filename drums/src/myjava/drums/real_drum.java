@@ -24,6 +24,7 @@ public class real_drum implements ActionListener, KeyListener {
             "CRASH 2"
     };
 
+    @SuppressWarnings("unchecked")
     JComboBox<String>[] equipmentBoxes = new JComboBox[12];
 
     String[] defaultKeys = {
@@ -32,9 +33,6 @@ public class real_drum implements ActionListener, KeyListener {
             "R", "T", "Y", "U"
     };
 
-    String[] BPMs = {
-            "60", "80", "120", "180"
-    };
     String[] BPMTYPES = {
             "1", "2", "3", "4"
     };
@@ -78,6 +76,13 @@ public class real_drum implements ActionListener, KeyListener {
         mainf.addKeyListener(this);
         mainf.setFocusable(true);
         mainf.requestFocus();
+
+        // TOP CONTROL PANEL
+        JPanel topPanel = new JPanel();
+        topPanel.setBounds(0, 0, 1000, 45);
+        topPanel.setLayout(null);
+        topPanel.setBackground(new Color(45, 45, 45)); // optional dark header
+        mainc.add(topPanel);
 
         // kick drum
         kick1 = new JButton("KICK");
@@ -187,7 +192,7 @@ public class real_drum implements ActionListener, KeyListener {
         settings.setBounds(30, 10, 200, 30);
         settings.setFocusable(false);
         settings.setBackground(buttColor);
-        mainc.add(settings);
+        topPanel.add(settings);
         settings.addActionListener(e -> {
             Point p1 = mainf.getLocation();
             settingsf.setLocation(p1);
@@ -200,7 +205,7 @@ public class real_drum implements ActionListener, KeyListener {
         modeBtn.setBounds(730, 10, 200, 30);
         modeBtn.setFocusable(false);
         modeBtn.setBackground(buttColor);
-        mainc.add(modeBtn);
+        topPanel.add(modeBtn);
 
         modeBtn.addActionListener(e -> {
             keyboardMode = !keyboardMode;
@@ -213,28 +218,57 @@ public class real_drum implements ActionListener, KeyListener {
             }
         });
 
-        // drop down menu for BPM speed
-        JComboBox<String> BPM = new JComboBox<>(BPMs);
-        BPM.setBounds(250, 10, 100, 30);
-        mainc.add(BPM);
+        // text field for BPM speed
+        JTextField BPM = new JTextField();
+        BPM.setBounds(295, 10, 53, 30);
+        BPM.setText("120");
+        topPanel.add(BPM);
+
+        // speed down button
+        JButton speeddown = new JButton("-");
+        speeddown.setBounds(250, 10, 45, 30);
+        speeddown.setFocusable(false);
+        speeddown.setBackground(buttColor);
+        topPanel.add(speeddown);
+
+        speeddown.addActionListener(e -> {
+            bpm = Integer.parseInt(BPM.getText());
+            bpm = bpm - 5;
+            if (bpm < 0)
+                bpm = 0; // prevents negative BPM
+            BPM.setText(String.valueOf(bpm));
+        });
+
+        // speed up button
+        JButton speedup = new JButton("+");
+        speedup.setBounds(345, 10, 45, 30);
+        speedup.setFocusable(false);
+        speedup.setBackground(buttColor);
+        topPanel.add(speedup);
+
+        speedup.addActionListener(e -> {
+            bpm = Integer.parseInt(BPM.getText());
+            bpm = bpm + 5;
+            BPM.setText(String.valueOf(bpm));
+        });
 
         mainf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // drop down menu for BPM types
         JComboBox<String> BPMTYPE = new JComboBox<>(BPMTYPES);
-        BPMTYPE.setBounds(350, 10, 50, 30);
-        mainc.add(BPMTYPE);
+        BPMTYPE.setBounds(390, 10, 105, 30);
+        topPanel.add(BPMTYPE);
 
         mainf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // play button
         play = new JButton("▶️");
-        play.setBounds(400, 10, 100, 30);
+        play.setBounds(495, 10, 80, 30);
         play.setFocusable(false);
         play.setBackground(buttColor);
-        mainc.add(play);
+        topPanel.add(play);
         play.addActionListener(e -> {
-            bpm = Integer.parseInt((String) BPM.getSelectedItem());
+            bpm = Integer.parseInt((String) BPM.getText());
             beattype = Integer.parseInt((String) BPMTYPE.getSelectedItem());
             beatDelay = 60000 / bpm;
 
@@ -766,7 +800,7 @@ public class real_drum implements ActionListener, KeyListener {
     void playSound(String fileName) {
         try {
             AudioInputStream audio = AudioSystem.getAudioInputStream(
-                    new File("sounds/" + fileName));
+                    getClass().getResource("/sounds/" + fileName));
             Clip clip = AudioSystem.getClip();
             clip.open(audio);
             clip.start();
