@@ -1,7 +1,7 @@
 package myjava.drums;
 
 import javax.sound.sampled.*;
-import java.io.File;
+// import java.io.File;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
