@@ -34,7 +34,7 @@ public class real_drum implements ActionListener, KeyListener {
     };
 
     String[] BPMTYPES = {
-            "1", "2", "3", "4"
+            "1", "2", "3", "4", "5", "6", "7", "8", "9"
     };
 
     Color buttColor = new Color(156, 213, 255);
@@ -270,8 +270,7 @@ public class real_drum implements ActionListener, KeyListener {
         play.addActionListener(e -> {
             bpm = Integer.parseInt((String) BPM.getText());
             beattype = Integer.parseInt((String) BPMTYPE.getSelectedItem());
-            beatDelay = 60000 / bpm;
-
+            beatDelay = 60000 / (bpm * 4);
             beatTimer.setDelay(beatDelay);
 
             playing = !playing;
@@ -293,7 +292,7 @@ public class real_drum implements ActionListener, KeyListener {
 
             switch (beattype) {
                 case 1:
-                    playSound("KICK.wav"); // metronome
+                    playSound("CLICK2.wav"); // metronome
                     break;
 
                 case 2:
@@ -312,6 +311,104 @@ public class real_drum implements ActionListener, KeyListener {
                         playSound("SNARE 2.wav");
                     if (step % 4 == 3)
                         playSound("CLOSE HH.wav");
+                    step++;
+                    break;
+                case 4:
+                    if (step % 4 == 0)
+                        playSound("KICK.wav");
+                    if (step % 4 == 1)
+                        playSound("CLOSE HH.wav");
+                    if (step % 4 == 2)
+                        playSound("SNARE 2.wav");
+                    if (step % 4 == 3)
+                        playSound("CLOSE HH.wav");
+                    step++;
+                    break;
+                case 5:
+                    if (step % 4 == 0)
+                        playSound("KICK.wav");
+                    if (step % 4 == 1)
+                        playSound("CLOSE HH.wav");
+                    if (step % 4 == 2)
+                        playSound("KICK.wav");
+                    if (step % 4 == 3)
+                        playSound("SNARE 2.wav");
+                    step++;
+                    break;
+                case 6:
+                    if (step % 8 == 0)
+                        playSound("KICK.wav");
+                    if (step % 8 == 1)
+                        playSound("CLOSE HH.wav");
+                    if (step % 8 == 2)
+                        playSound("SNARE 2.wav");
+                    if (step % 8 == 3)
+                        playSound("CLOSE HH.wav");
+                    if (step % 8 == 4)
+                        playSound("KICK.wav");
+                    if (step % 8 == 5)
+                        playSound("OPEN HH.wav");
+                    if (step % 8 == 6)
+                        playSound("SNARE 2.wav");
+                    if (step % 8 == 7)
+                        playSound("CLOSE HH.wav");
+                    step++;
+                    break;
+                case 7:
+                    if (step % 8 == 0)
+                        playSound("KICK.wav");
+                    if (step % 8 == 2)
+                        playSound("SNARE 2.wav");
+                    if (step % 8 == 4)
+                        playSound("KICK.wav");
+                    if (step % 8 == 6)
+                        playSound("SNARE 2.wav");
+
+                    if (step % 2 == 0)
+                        playSound("CLOSE HH.wav");
+
+                    step++;
+                    break;
+                case 8:
+                    if (step % 4 == 0)
+                        playSound("TOM 1.wav");
+                    if (step % 4 == 1)
+                        playSound("TOM 2.wav");
+                    if (step % 4 == 2)
+                        playSound("TOM 3.wav");
+                    if (step % 4 == 3)
+                        playSound("CRASH.wav");
+                    step++;
+                    break;
+                case 9:
+
+                    if (step % 16 == 0)
+                        playSound("KICK.wav");
+                    if (step % 16 == 2)
+                        playSound("CLOSE HH.wav");
+
+                    if (step % 16 == 4) {
+                        playSound("SNARE 2.wav");
+                        playSound("CLOSE HH.wav");
+                    }
+
+                    if (step % 16 == 6)
+                        playSound("CLOSE HH.wav");
+
+                    if (step % 16 == 8)
+                        playSound("KICK.wav");
+
+                    if (step % 16 == 10)
+                        playSound("CLOSE HH.wav");
+
+                    if (step % 16 == 12) {
+                        playSound("SNARE 2.wav");
+                        playSound("CLOSE HH.wav");
+                    }
+
+                    if (step % 16 == 14)
+                        playSound("CLOSE HH.wav");
+
                     step++;
                     break;
             }
