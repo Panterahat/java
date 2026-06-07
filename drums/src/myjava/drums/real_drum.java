@@ -270,7 +270,8 @@ public class real_drum implements ActionListener, KeyListener {
         play.addActionListener(e -> {
             bpm = Integer.parseInt((String) BPM.getText());
             beattype = Integer.parseInt((String) BPMTYPE.getSelectedItem());
-            beatDelay = 60000 / (bpm * 4);
+            beatDelay = 60000 / bpm;
+
             beatTimer.setDelay(beatDelay);
 
             playing = !playing;
